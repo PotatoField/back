@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PotatoFieldApplication {
 
 	// jy test
+// sy test~~
 	public static void main(String[] args) {
 		SpringApplication.run(PotatoFieldApplication.class, args);
 	}
