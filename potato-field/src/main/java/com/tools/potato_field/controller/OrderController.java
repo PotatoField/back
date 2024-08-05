@@ -27,4 +27,6 @@ public class OrderController {
 
     @GetMapping
     public List<Order> getAllOrders() {
-        return orderService
+        return orderService.findAllOrders();
+    }
+}
