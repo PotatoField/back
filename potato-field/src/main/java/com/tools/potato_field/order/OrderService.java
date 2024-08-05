@@ -1,7 +1,6 @@
-package com.tools.potato_field.service;
+package com.tools.potato_field.order;
 
 import com.tools.potato_field.entity.Order;
-import com.tools.potato_field.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

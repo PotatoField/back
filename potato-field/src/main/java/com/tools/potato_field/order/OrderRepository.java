@@ -1,4 +1,4 @@
-package com.tools.potato_field.repository;
+package com.tools.potato_field.order;
 
 import com.tools.potato_field.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;

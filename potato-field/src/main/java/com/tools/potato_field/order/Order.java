@@ -1,4 +1,4 @@
-package com.example.ex01.service;
+package com.tools.potato_field.order;
 
 import javax.persistence.*;
 import lombok.Data;
