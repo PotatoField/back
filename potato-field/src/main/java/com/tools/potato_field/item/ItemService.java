@@ -1,10 +1,8 @@
-package com.tools.potato_field.service;
+package com.tools.potato_field.item;
 
-import com.tools.potato_field.entity.Item;
-import com.tools.potato_field.repository.ItemRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service

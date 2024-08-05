@@ -1,6 +1,9 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.item;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity

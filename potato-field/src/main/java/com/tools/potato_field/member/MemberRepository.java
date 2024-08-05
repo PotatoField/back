@@ -1,6 +1,6 @@
-package com.tools.potato_field.repository;
+package com.tools.potato_field.member;
 
-import com.tools.potato_field.entity.Member;
+import com.tools.potato_field.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

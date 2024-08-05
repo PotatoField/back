@@ -1,7 +1,5 @@
-package com.tools.potato_field.controller;
+package com.tools.potato_field.item;
 
-import com.tools.potato_field.entity.Item;
-import com.tools.potato_field.service.ItemService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

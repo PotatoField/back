@@ -1,5 +1,7 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.order;
 
+import com.tools.potato_field.item.Item;
+import com.tools.potato_field.member.Member;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;

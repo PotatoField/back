@@ -1,7 +1,5 @@
-package com.tools.potato_field.controller;
+package com.tools.potato_field.member;
 
-import com.tools.potato_field.entity.Member;
-import com.tools.potato_field.service.MemberService;
 import com.tools.potato_field.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

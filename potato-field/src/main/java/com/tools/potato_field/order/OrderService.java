@@ -1,14 +1,15 @@
-package com.tools.potato_field.service;
+package com.tools.potato_field.order;
 
-import com.tools.potato_field.entity.Order;
-import com.tools.potato_field.repository.OrderRepository;
+import com.tools.potato_field.order.Order;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @Service
 @Transactional
+
 public class OrderService {
     private final OrderRepository orderRepository;
 
