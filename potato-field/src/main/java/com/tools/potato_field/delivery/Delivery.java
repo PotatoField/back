@@ -1,4 +1,4 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.delivery;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,10 +1,11 @@
-package com.tools.potato_field.service;
+package com.tools.potato_field.delivery;
 
-import com.tools.potato_field.entity.Delivery;
+import com.tools.potato_field.delivery
+.Delivery;
 import com.tools.potato_field.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Service
