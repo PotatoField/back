@@ -2,7 +2,7 @@ package com.tools.potato_field.delivery;
 
 import com.tools.potato_field.delivery
 .Delivery;
-import com.tools.potato_field.repository.DeliveryRepository;
+import com.tools.potato_field.delivery.DeliveryRepository;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;

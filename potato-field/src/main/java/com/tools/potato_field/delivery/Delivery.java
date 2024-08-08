@@ -1,5 +1,6 @@
 package com.tools.potato_field.delivery;
 
+import com.tools.potato_field.order.Order;
 import jakarta.persistence.*;
 import lombok.Data;
 
