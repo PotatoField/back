@@ -1,6 +1,7 @@
-package com.tools.potato_field.repository;
+package com.tools.potato_field.delivery;
 
-import com.tools.potato_field.entity.Delivery;
+import com.tools.potato_field.delivery
+.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
