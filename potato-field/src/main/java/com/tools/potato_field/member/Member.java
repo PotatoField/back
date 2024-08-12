@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
 @Builder
@@ -24,8 +25,18 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+
+    @Column(name = "phone_number")
+    private String number;
+
+
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String address;
 
     // 추가적인 필드들 (예: 생년월일, 전화번호 등)

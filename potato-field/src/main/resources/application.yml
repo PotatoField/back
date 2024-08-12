@@ -21,11 +21,13 @@ spring:
       port: 6379
   session:
     store-type: redis
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 8080
 
 # JWT 설정을 별도의 섹션으로 분리
 jwt:
-  secret: your_very_long_and_secure_secret_key_here
-  expiration: 86400000  # 24 hours in milliseconds
+  secret: yourSecretKey
+  expiration: 360000
