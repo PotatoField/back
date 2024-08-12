@@ -1,4 +1,4 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.category;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Category {
+public class Category_2 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
