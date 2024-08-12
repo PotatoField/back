@@ -1,5 +1,6 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.item;
 
+import com.tools.potato_field.entity.Member;
 import jakarta.persistence.*;
 import lombok.Data;
 
