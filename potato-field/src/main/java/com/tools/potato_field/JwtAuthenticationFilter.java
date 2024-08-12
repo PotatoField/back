@@ -1,7 +1,7 @@
 package com.tools.potato_field;
 
 
-import com.tools.potato_field.service.CustomUserDetailsService;
+import com.tools.potato_field.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

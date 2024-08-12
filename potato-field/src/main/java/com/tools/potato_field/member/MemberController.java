@@ -27,7 +27,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest, HttpSession session) {
-        Member member = memberService.loginMember(loginRequest.getEmail(), loginRequest.getPassword());
+        Member member = memberService.loginMember(loginRequest.getUsername(), loginRequest.getPassword());
         session.setAttribute("MEMBER_ID", member.getId());
         return ResponseEntity.ok("Login successful");
     }

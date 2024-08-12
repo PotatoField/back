@@ -1,8 +1,7 @@
-package com.tools.potato_field.delivery;
+package com.tools.potato_field.controller;
 
-import com.tools.potato_field.delivery
-.Delivery;
-import com.tools.potato_field.delivery.DeliveryService;
+import com.tools.potato_field.entity.Delivery;
+import com.tools.potato_field.service.DeliveryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
