@@ -1,4 +1,4 @@
-package com.tools.potato_field.entity;
+package com.tools.potato_field.category;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
