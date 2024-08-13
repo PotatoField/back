@@ -1,7 +1,5 @@
 package com.tools.potato_field;
 
-
-import com.tools.potato_field.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import com.tools.potato_field.member.CustomUserDetailsService;
 import java.io.IOException;
 
 @Component

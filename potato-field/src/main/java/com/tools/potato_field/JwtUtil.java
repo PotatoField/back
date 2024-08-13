@@ -3,7 +3,7 @@ package com.tools.potato_field;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Date;
 
 @Component
@@ -24,16 +24,25 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            return true;
+            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            String username = claims.getSubject();
+            Date expirationDate = claims.getExpiration();
+
+            return (username.equals(userDetails.getUsername()) &&
+                    expirationDate.after(new Date()));
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
     public String getUsernameFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        try {
+            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            return claims.getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            return null;
+        }
     }
 }
