@@ -1,7 +1,6 @@
-package com.tools.potato_field.controller;
+package com.tools.potato_field.order;
 
-import com.tools.potato_field.entity.Order;
-import com.tools.potato_field.service.OrderService;
+import com.tools.potato_field.order.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
