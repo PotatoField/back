@@ -19,13 +19,15 @@ public class MemberService {
     }
 
     public Member registerMember(Member member) {
+        if (memberRepository.findByUsername(member.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
         if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
-            throw new RuntimeException("Email is already in use");
+            throw new RuntimeException("Email already exists");
         }
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }
-
     public Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
