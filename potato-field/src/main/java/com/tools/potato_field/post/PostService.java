@@ -39,5 +39,10 @@ public class PostService {
 
         return likeRepository.save(like);
     }
+
+    public Post findById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+    }
 }
 
