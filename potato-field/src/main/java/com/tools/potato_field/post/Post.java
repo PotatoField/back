@@ -35,9 +35,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private Set<PostImage> images;
-
-    @OneToMany(mappedBy = "post")
-    private Set<PostCategory> categories;
 }
 
 

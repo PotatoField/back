@@ -35,7 +35,6 @@ public class PostService {
         Like like = new Like();
         like.setPost(post);
         like.setMember(member);  // Member 객체를 설정합니다.
-        post.getLikes().add(like);
 
         return likeRepository.save(like);
     }
