@@ -1,7 +1,7 @@
 package com.tools.potato_field.postimage;
 
 import com.tools.potato_field.post.Post;
-import jakarta.persistence.*
+import jakarta.persistence.*;
 import jakarta.persistence.Id;
 
 @Entity
