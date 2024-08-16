@@ -18,13 +18,14 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Member findByUsername(String username) {
-        return memberRepository.findByUsername(username)
+    public Member findByUserID(String username) {
+        return memberRepository.findByUserID(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
     public Member registerMember(Member member) {
-        if (memberRepository.findByUsername(member.getUsername()).isPresent()) {
+        if (memberRepository.findByUserID
+                (member.getUserID()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
         if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
@@ -46,8 +47,8 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    public Member loginMember(String email, String password) {
-        Member member = memberRepository.findByEmail(email)
+    public Member loginMember(String userID, String password) {
+        Member member = memberRepository.findByUserID(userID)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new RuntimeException("Invalid password");
