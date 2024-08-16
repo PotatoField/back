@@ -1,12 +1,13 @@
 package com.tools.potato_field.member;
 
 import com.tools.potato_field.dto.LoginRequest;
+import com.tools.potato_field.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -14,10 +15,12 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -26,49 +29,40 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest, HttpSession session) {
+    public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest) {
         Member member = memberService.loginMember(loginRequest.getUsername(), loginRequest.getPassword());
-        session.setAttribute("MEMBER_ID", member.getId());
-        return ResponseEntity.ok("Login successful");
+        String token = jwtUtil.generateToken(member.getUsername());
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutMember(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok("Logout successful");
+    public ResponseEntity<String> logoutMember() {
+        // JWT는 서버 측에서 세션을 유지하지 않으므로, 클라이언트에서 토큰을 삭제하도록 안내
+        return ResponseEntity.ok("Logout successful. Please remove the token from the client side.");
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Member> getCurrentMember(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("MEMBER_ID");
-        if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Member member = memberService.findMember(memberId);
+    public ResponseEntity<Member> getCurrentMember(Authentication authentication) {
+        String username = authentication.getName();
+        Member member = memberService.findByUsername(username);
         return ResponseEntity.ok(member);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Member> getMember(@PathVariable Long id, HttpSession session) {
-        if (session.getAttribute("MEMBER_ID") == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<Member> getMember(@PathVariable Long id, Authentication authentication) {
+        // 인증된 사용자만 접근 가능
         return ResponseEntity.ok(memberService.findMember(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Member>> getAllMembers(HttpSession session) {
-        if (session.getAttribute("MEMBER_ID") == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<List<Member>> getAllMembers(Authentication authentication) {
+        // 인증된 사용자만 접근 가능
         return ResponseEntity.ok(memberService.findAllMembers());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long id, HttpSession session) {
-        if (session.getAttribute("MEMBER_ID") == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id, Authentication authentication) {
+        // 인증된 사용자만 접근 가능
         memberService.deleteMember(id);
         return ResponseEntity.ok().build();
     }
