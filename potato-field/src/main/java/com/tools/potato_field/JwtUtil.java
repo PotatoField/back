@@ -2,9 +2,11 @@ package com.tools.potato_field;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
+import java.util.function.Function;
 
 @Component
 public class JwtUtil {
@@ -25,24 +27,32 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        try {
-            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-            String username = claims.getSubject();
-            Date expirationDate = claims.getExpiration();
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
 
-            return (username.equals(userDetails.getUsername()) &&
-                    expirationDate.after(new Date()));
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+            throw new JwtException("Invalid JWT token", e);
         }
     }
 
-    public String getUsernameFromToken(String token) {
-        try {
-            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-            return claims.getSubject();
-        } catch (JwtException | IllegalArgumentException e) {
-            return null;
-        }
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 }
