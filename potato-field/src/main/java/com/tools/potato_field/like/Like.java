@@ -1,24 +1,26 @@
 package com.tools.potato_field.like;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.tools.potato_field.member.Member;
+import com.tools.potato_field.post.Post;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
+@Entity
 public class Like {
 
+    // Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;  // 회원 ID
-    private Long postId;    // 포스트 ID
-}
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)//데이터베이스 테이블에서 Member 엔티티의 id를 참조하는 외래키
+    private Member member;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+}
