@@ -13,14 +13,14 @@ public class LikesController {
         this.likesService = likesService;
     }
 
-    @PostMapping
-    public ResponseEntity<Likes> addLike(@RequestParam Long memberId, @RequestParam Long postId) {
+    @PostMapping("/posts/{postId}")
+    public ResponseEntity<Likes> addLike(@RequestParam Long memberId, @PathVariable Long postId) {
         Likes likes = likesService.addLike(memberId, postId);
         return ResponseEntity.ok(likes);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> removeLike(@RequestParam Long memberId, @RequestParam Long postId) {
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<?> removeLike(@RequestParam Long memberId, @PathVariable Long postId) {
         likesService.removeLike(memberId, postId);
         return ResponseEntity.ok().body("Like removed successfully");
     }
