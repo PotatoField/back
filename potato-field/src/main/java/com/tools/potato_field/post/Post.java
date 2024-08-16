@@ -28,7 +28,9 @@ public class Post {
     private List<PostImage> postImages;  // 게시물 이미지와의 관계
 
     // 기본 생성자
-    public Post() {}
+    public Post() {
+
+    }
 
     // 모든 필드를 포함하는 생성자
     public Post(String title, String content, Category_1 category, Member member) {
