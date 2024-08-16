@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class Like {
+public class Likes {
 
     // Getters and Setters
     @Id

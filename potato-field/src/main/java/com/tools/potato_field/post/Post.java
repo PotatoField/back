@@ -2,14 +2,13 @@ package com.tools.potato_field.post;
 
 import com.tools.potato_field.PostCategory;
 import com.tools.potato_field.category.Category_1;
-import com.tools.potato_field.like.Like;
+import com.tools.potato_field.like.Likes;
 import com.tools.potato_field.member.Member;
 import com.tools.potato_field.postimage.PostImage;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
