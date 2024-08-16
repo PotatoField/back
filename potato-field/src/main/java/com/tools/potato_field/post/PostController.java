@@ -2,12 +2,14 @@ package com.tools.potato_field.post;
 
 import com.tools.potato_field.member.Member;
 import com.tools.potato_field.member.MemberRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -18,16 +20,23 @@ public class PostController {
         this.memberRepository = memberRepository;
     }
 
-    @PostMapping
-    public Post createPost(@RequestBody PostRequest request) {
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Post> createPost(@RequestBody PostRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        return postService.createPostWithImages(
+        Post post = postService.createPostWithImages(
                 request.getTitle(),
                 request.getContent(),
                 member,
                 request.getImageUrls()
         );
+
+        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
