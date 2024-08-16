@@ -2,13 +2,14 @@ package com.tools.potato_field.item;
 
 import com.tools.potato_field.member.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 public class ItemController {
 
     @Autowired
@@ -16,26 +17,30 @@ public class ItemController {
 
     // Create
     @PostMapping
-    public Item createItem(@RequestBody Item item) {
-        return itemRepository.save(item);
+    public ResponseEntity<Item> createItem(@RequestBody Item item) {
+        Item savedItem = itemRepository.save(item);
+        return ResponseEntity.ok(savedItem);
     }
 
     // Read
     @GetMapping("/{id}")
-    public Optional<Item> getItem(@PathVariable Long id) {
-        return itemRepository.findById(id);
+    public ResponseEntity<Item> getItem(@PathVariable Long id) {
+        Optional<Item> item = itemRepository.findById(id);
+        return item.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Read All
     @GetMapping
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public ResponseEntity<List<Item>> getAllItems() {
+        List<Item> items = itemRepository.findAll();
+        return ResponseEntity.ok(items);
     }
 
     // Update
     @PutMapping("/{id}")
-    public Item updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
-        Item item = itemRepository.findById(id).orElseThrow();
+    public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
 
         if (itemDetails.getItemName() != null) {
             item.setItemName(itemDetails.getItemName());
@@ -57,13 +62,14 @@ public class ItemController {
             item.setMember(itemDetails.getMember());
         }
 
-        return itemRepository.save(item);
+        Item updatedItem = itemRepository.save(item);
+        return ResponseEntity.ok(updatedItem);
     }
 
     // Delete
     @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
         itemRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
-
