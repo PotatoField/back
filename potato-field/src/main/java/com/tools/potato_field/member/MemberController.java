@@ -30,8 +30,8 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginMember(@RequestBody LoginRequest loginRequest) {
-        Member member = memberService.loginMember(loginRequest.getUsername(), loginRequest.getPassword());
-        String token = jwtUtil.generateToken(member.getUsername());
+        Member member = memberService.loginMember(loginRequest.getUserID(), loginRequest.getPassword());
+        String token = jwtUtil.generateToken(member.getUserID());
         return ResponseEntity.ok(token);
     }
 
@@ -44,7 +44,9 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<Member> getCurrentMember(Authentication authentication) {
         String username = authentication.getName();
-        Member member = memberService.findByUsername(username);
+        Member member = memberService.findByUserID
+
+(username);
         return ResponseEntity.ok(member);
     }
 

@@ -26,7 +26,7 @@ public class Member {
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String userID;
 
 
     @Column(name = "phone_number")
