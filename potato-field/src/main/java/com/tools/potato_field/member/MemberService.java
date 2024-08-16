@@ -18,6 +18,11 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+    }
+
     public Member registerMember(Member member) {
         if (memberRepository.findByUsername(member.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
