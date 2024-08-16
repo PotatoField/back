@@ -1,6 +1,5 @@
 package com.tools.potato_field.post;
 
-import com.tools.potato_field.PostCategory;
 import com.tools.potato_field.category.Category_1;
 import com.tools.potato_field.member.Member;
 import com.tools.potato_field.postimage.PostImage;
@@ -33,8 +32,10 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private Set<PostImage> images;
 
-    @OneToMany(mappedBy = "post")
-    private Set<PostCategory> categories;
+//    @OneToMany(mappedBy = "post")
+//    private Set<PostCategory> categories;
+//
+
 }
 
 
