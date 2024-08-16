@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class LikeService {
-    private final LikeRepository likeRepository;
+public class LikesService {
+    private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    public LikeService(LikeRepository likeRepository, MemberRepository memberRepository, PostRepository postRepository) {
-        this.likeRepository = likeRepository;
+    public LikesService(LikesRepository likesRepository, MemberRepository memberRepository, PostRepository postRepository) {
+        this.likesRepository = likesRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
     }
 
-    public Like addLike(Long memberId, Long postId) {
-        Optional<Like> existingLike = likeRepository.findByMemberIdAndPostId(memberId, postId);
+    public Likes addLike(Long memberId, Long postId) {
+        Optional<Likes> existingLike = likesRepository.findByMemberIdAndPostId(memberId, postId);
         if (existingLike.isPresent()) {
             throw new IllegalArgumentException("Already liked");
         }
@@ -31,16 +31,16 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
 
-        Like like = new Like();
-        like.setMember(member);  // Member 객체 설정
-        like.setPost(post);  // Post 객체 설정
+        Likes likes = new Likes();
+        likes.setMember(member);  // Member 객체 설정
+        likes.setPost(post);  // Post 객체 설정
 
-        return likeRepository.save(like);
+        return likesRepository.save(likes);
     }
 
     public void removeLike(Long memberId, Long postId) {
-        Optional<Like> existingLike = likeRepository.findByMemberIdAndPostId(memberId, postId);
-        existingLike.ifPresent(likeRepository::delete);
+        Optional<Likes> existingLike = likesRepository.findByMemberIdAndPostId(memberId, postId);
+        existingLike.ifPresent(likesRepository::delete);
     }
 }
 
