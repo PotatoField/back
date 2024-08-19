@@ -17,7 +17,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -29,15 +29,20 @@ public class Member {
     private String userID;
 
 
-    @Column(name = "phone_number")
+    @Column(name = "number")
     private String number;
 
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String address;
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 
     // 추가적인 필드들 (예: 생년월일, 전화번호 등)
 }
