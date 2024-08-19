@@ -24,9 +24,8 @@ public class MemberService {
     }
 
     public Member registerMember(Member member) {
-        if (memberRepository.findByUserID
-                (member.getUserID()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+        if (memberRepository.findByUserID(member.getUserID()).isPresent()) {
+            throw new RuntimeException("User ID already exists");
         }
         if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
