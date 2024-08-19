@@ -29,7 +29,7 @@ public class Member {
     private String userID;
 
 
-    @Column(name = "phone_number")
+    @Column(name = "phoneNumber")
     private String number;
 
 
