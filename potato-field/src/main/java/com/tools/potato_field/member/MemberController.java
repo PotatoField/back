@@ -52,9 +52,7 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<Member> getCurrentMember(Authentication authentication) {
         String username = authentication.getName();
-        Member member = memberService.findByUserID
-
-(username);
+        Member member = memberService.findByUserID(username);
         return ResponseEntity.ok(member);
     }
 

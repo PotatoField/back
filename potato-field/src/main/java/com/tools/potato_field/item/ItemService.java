@@ -1,5 +1,6 @@
 package com.tools.potato_field.item;
 
+import com.tools.potato_field.post.Post;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,9 @@ public class ItemService {
 
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
+    }
+
+    public List<Item> findItemsBydPostId(Long postId) {
+        return itemRepository.findByPostId(postId);
     }
 }

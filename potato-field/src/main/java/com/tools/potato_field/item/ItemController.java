@@ -54,10 +54,6 @@ public class ItemController {
             item.setIconNumber(itemDetails.getIconNumber());
         }
 
-        if (itemDetails.getId2() != null) {
-            item.setId2(itemDetails.getId2());
-        }
-
         if (itemDetails.getMember() != null) {
             item.setMember(itemDetails.getMember());
         }
