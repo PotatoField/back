@@ -1,9 +1,7 @@
 package com.tools.potato_field.post;
 
-import com.tools.potato_field.member.Member;
-import com.tools.potato_field.member.MemberRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.tools.potato_field.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,31 +10,43 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
 
-    private final PostService postService;
-    private final MemberRepository memberRepository;
+    @Autowired
+    private PostRepository postRepository;
 
-    public PostController(PostService postService, MemberRepository memberRepository) {
-        this.postService = postService;
-        this.memberRepository = memberRepository;
+    @GetMapping
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Post> createPost(@RequestBody PostRequest request) {
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
-
-        Post post = postService.createPostWithImages(
-                request.getTitle(),
-                request.getContent(),
-                member,
-                request.getImageUrls()
-        );
-
-        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    @GetMapping("/{id}")
+    public Post getPostById(@PathVariable Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    @PostMapping
+    public Post createPost(@RequestBody Post post) {
+        return postRepository.save(post);
+    }
+
+    @PutMapping("/{id}")
+    public Post updatePost(@PathVariable Long id, @RequestBody Post postDetails) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
+
+        post.setTitle(postDetails.getTitle());
+        post.setContent(postDetails.getContent());
+        post.setMember(postDetails.getMember());
+
+        return postRepository.save(post);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
+
+        postRepository.delete(post);
     }
 }
+
