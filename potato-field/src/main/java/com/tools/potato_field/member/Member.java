@@ -28,12 +28,7 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String userID;
 
-
-<<<<<<< HEAD
     @Column(name = "phoneNumber")
-=======
-    @Column(name = "number")
->>>>>>> 913897a1cb54f39bbed74d77e545982945bfd320
     private String number;
 
 

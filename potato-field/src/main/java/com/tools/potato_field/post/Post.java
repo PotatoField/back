@@ -12,35 +12,31 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "id2")
-    private Category_1 category;  // 성별 카테고리와의 관계
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "id3")
-    private Member member;  // 회원과의 관계
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostImage> postImages;  // 게시물 이미지와의 관계
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category_1 category;
 
     // 기본 생성자
     public Post() {
-
     }
 
-    // 모든 필드를 포함하는 생성자
-    public Post(String title, String content, Category_1 category, Member member) {
+    // 모든 필드를 받는 생성자
+    public Post(String title, String content, Member member, Category_1 category) {
         this.title = title;
         this.content = content;
-        this.category = category;
         this.member = member;
+        this.category = category;
     }
 
-    // Getter 및 Setter 메서드
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -65,14 +61,6 @@ public class Post {
         this.content = content;
     }
 
-    public Category_1 getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category_1 category) {
-        this.category = category;
-    }
-
     public Member getMember() {
         return member;
     }
@@ -81,22 +69,11 @@ public class Post {
         this.member = member;
     }
 
-    public List<PostImage> getPostImages() {
-        return postImages;
+    public Category_1 getCategory() {
+        return category;
     }
 
-    public void setPostImages(List<PostImage> postImages) {
-        this.postImages = postImages;
-    }
-
-    // 편의 메서드 (양방향 관계에서의 데이터 처리 편의성)
-    public void addPostImage(PostImage postImage) {
-        postImages.add(postImage);
-        postImage.setPost(this);
-    }
-
-    public void removePostImage(PostImage postImage) {
-        postImages.remove(postImage);
-        postImage.setPost(null);
+    public void setCategory(Category_1 category) {
+        this.category = category;
     }
 }

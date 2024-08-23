@@ -4,19 +4,23 @@ public class PostDto {
     private Long id;
     private String title;
     private String content;
-    private String member;
+    private Long memberId;
+    private Long categoryId;
 
-    // 기본 생성자
-    public PostDto() {}
+    // 기본 생성자 (No-Args Constructor)
+    public PostDto() {
+    }
 
-    // 매개변수를 받는 생성자
-    public PostDto(Long id, String title, String content, String author) {
+    // 모든 필드를 받는 생성자 (All-Args Constructor)
+    public PostDto(Long id, String title, String content, Long memberId, Long categoryId) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.member = member;
+        this.memberId = memberId;
+        this.categoryId = categoryId;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -41,11 +45,19 @@ public class PostDto {
         this.content = content;
     }
 
-    public String getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setAuthor(String member) {
-        this.member= member;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
