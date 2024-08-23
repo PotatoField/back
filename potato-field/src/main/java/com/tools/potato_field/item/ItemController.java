@@ -1,75 +1,65 @@
 package com.tools.potato_field.item;
 
-import com.tools.potato_field.member.Member;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import com.tools.potato_field.member.Member;
 
 @RestController
 @RequestMapping("/api/items")
 public class ItemController {
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ItemService itemService;
 
     // Create
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        Item savedItem = itemRepository.save(item);
+    public ResponseEntity<Item> createItem(@Valid @RequestBody Item item, @AuthenticationPrincipal Member member) {
+        item.setMember(member); // 현재 로그인한 멤버를 아이템의 소유자로 설정
+        Item savedItem = itemService.addItem(item);
         return ResponseEntity.ok(savedItem);
     }
 
     // Read
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItem(@PathVariable Long id) {
-        Optional<Item> item = itemRepository.findById(id);
-        return item.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Item item = itemService.findItem(id);
+        return ResponseEntity.ok(item);
     }
 
-    // Read All
+    // Read All with Pagination
     @GetMapping
-    public ResponseEntity<List<Item>> getAllItems() {
-        List<Item> items = itemRepository.findAll();
+    public ResponseEntity<Page<Item>> getAllItems(Pageable pageable) {
+        Page<Item> items = itemService.findAllItems(pageable);
         return ResponseEntity.ok(items);
     }
 
     // Update
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+    public ResponseEntity<Item> updateItem(@PathVariable Long id, @Valid @RequestBody Item itemDetails) {
+        Item item = itemService.findItem(id);
 
         if (itemDetails.getItemName() != null) {
             item.setItemName(itemDetails.getItemName());
         }
-
         if (itemDetails.getItemURL() != null) {
             item.setItemURL(itemDetails.getItemURL());
         }
-
         if (itemDetails.getIconNumber() != null) {
             item.setIconNumber(itemDetails.getIconNumber());
         }
-
-        if (itemDetails.getId2() != null) {
-            item.setId2(itemDetails.getId2());
-        }
-
-        if (itemDetails.getMember() != null) {
-            item.setMember(itemDetails.getMember());
-        }
-
-        Item updatedItem = itemRepository.save(item);
+        Item updatedItem = itemService.addItem(item);
         return ResponseEntity.ok(updatedItem);
     }
 
     // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
-        itemRepository.deleteById(id);
+        itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
 }
