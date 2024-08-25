@@ -2,11 +2,14 @@ package com.tools.potato_field.post;
 
 import com.tools.potato_field.category.Category_1;
 import jakarta.persistence.*;
-import java.util.List;
 import com.tools.potato_field.member.Member;
-import com.tools.potato_field.postimage.PostImage;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+
 public class Post {
 
     @Id
@@ -37,43 +40,4 @@ public class Post {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Category_1 getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category_1 category) {
-        this.category = category;
-    }
 }

@@ -50,8 +50,8 @@ public class PostService {
         // Post 엔티티 업데이트
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
-        post.setMember(postDto.getMemberId());
-        post.setCategory(postDto.getCategoryId());
+        post.setMember(postDto.getMember().getId());
+        post.setCategory(postDto.getCategoryId().getId());
         // 업데이트된 Post 엔티티 저장
         Post updatedPost = postRepository.save(post);
         // 저장된 Post 엔티티를 다시 PostDto로 변환하여 반환
@@ -72,8 +72,8 @@ public class PostService {
         Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
-        post.setMember(postDto.getMemberId());
-        post.setCategory(postDto.getCategoryId());
+        post.setMemberId(postDto.getMember().getId());
+        post.setCategoryId(postDto.getCategory().getId());
         return post;
     }
 
@@ -83,8 +83,8 @@ public class PostService {
         postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
-        postDto.setMemberId(post.getMember());
-        postDto.setCategoryId(post.getCategory());
+        postDto.setMemberId(post.getMember().getId());
+        postDto.setCategoryId(post.getCategory().getId());
         return postDto;
     }
 }
