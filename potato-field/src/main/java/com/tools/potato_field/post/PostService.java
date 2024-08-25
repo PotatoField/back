@@ -68,4 +68,14 @@ public class PostService {
         postDto.setCategoryId(post.getCategory().getId());
         return postDto;
     }
+
+    public PostDto updatePost(Long id, PostDto postDto) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        Post updatedPost = postRepository.save(post);
+        return mapToDto(updatedPost);
+    } // 4. Post 수정
+
 }
