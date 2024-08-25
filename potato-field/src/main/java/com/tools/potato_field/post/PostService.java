@@ -25,6 +25,13 @@ public class PostService {
         return mapToDto(savedPost);
     }
 
+    private Post mapToEntity(PostDto postDto) {
+        Post post = new Post();
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        return post;
+    }
+
     // 2. 특정 ID로 Post 조회
     public Optional<PostDto> getPostById(Long id) {
         // ID로 Post 엔티티 조회
@@ -42,22 +49,6 @@ public class PostService {
         return posts.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    // 4. Post 수정
-    public PostDto updatePost(Long id, PostDto postDto) {
-        // ID로 Post 엔티티 조회
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
-        // Post 엔티티 업데이트
-        post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getContent());
-        post.setMember(postDto.getMember().getId());
-        post.setCategory(postDto.getCategoryId().getId());
-        // 업데이트된 Post 엔티티 저장
-        Post updatedPost = postRepository.save(post);
-        // 저장된 Post 엔티티를 다시 PostDto로 변환하여 반환
-        return mapToDto(updatedPost);
-    }
-
     // 5. Post 삭제
     public void deletePost(Long id) {
         // ID로 Post 엔티티 조회
@@ -65,16 +56,6 @@ public class PostService {
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
         // Post 엔티티 삭제
         postRepository.delete(post);
-    }
-
-    // PostDto를 Post 엔티티로 변환하는 헬퍼 메서드
-    private Post mapToEntity(PostDto postDto) {
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getContent());
-        post.setMemberId(postDto.getMember().getId());
-        post.setCategoryId(postDto.getCategory().getId());
-        return post;
     }
 
     // Post 엔티티를 PostDto로 변환하는 헬퍼 메서드
