@@ -1,5 +1,9 @@
 package com.tools.potato_field.post;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import com.tools.potato_field.member.Member;
 import com.tools.potato_field.postimage.PostImage;
 import com.tools.potato_field.postimage.PostImageRepository;
@@ -18,7 +22,11 @@ public class PostService {
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
     }
-
+    //권준영
+    public List<Post> getPostsByUserID(String userID, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return postRepository.findByMemberUserID(userID, pageable).getContent();
+    }//권준영
     @Transactional
     public Post createPostWithImages(String title, String content, Member member, List<String> imageUrls) {
         Post post = new Post(title, content, null, member);  // Category는 null로 임시 설정
