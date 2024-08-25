@@ -1,18 +1,23 @@
 package com.tools.potato_field.post;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import com.tools.potato_field.ResourceNotFoundException;
+import com.tools.potato_field.postimage.PostImageRepository;
 import java.util.stream.Collectors;
 
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostImageRepository postImageRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, PostImageRepository postImageRepository) {
         this.postRepository = postRepository;
+        this.postImageRepository = postImageRepository;
     }
 
     // 1. Post 생성
@@ -78,4 +83,9 @@ public class PostService {
         return mapToDto(updatedPost);
     } // 4. Post 수정
 
+
+    public List<Post> getPostsByUserID(String userID, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return postRepository.findByMemberUserID(userID, pageable).getContent();
+    }//권준영
 }
