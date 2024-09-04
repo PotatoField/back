@@ -1,11 +1,8 @@
 package com.tools.potato_field.member;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.redis.core.RedisHash;
+import lombok.*;
+
 
 @Data
 @Builder
@@ -13,6 +10,7 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @Entity
 @Table(name = "members")
+@Getter@Setter
 public class Member {
 
     @Id
@@ -28,17 +26,18 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String userID;
 
-
-//<<<<<<< HEAD
-//    @Column(name = "phoneNumber")
-//=======
-//    @Column(name = "number")
-//>>>>>>> 913897a1cb54f39bbed74d77e545982945bfd320
     private String number;
 
 
     @Column(nullable = false)
     private String name;
+    private Integer height;
+    private String gender;
+    private Integer age;
+    private String profileImageUrl;
+    private String statusMessage;
+    private String description;
+    private boolean isProfilePublic;
 
     public String getUserID() {
         return userID;

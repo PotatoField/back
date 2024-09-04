@@ -3,6 +3,8 @@ package com.tools.potato_field.member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.tools.potato_field.dto.ProfileDto;
+import com.tools.potato_field.dto.AccountInfoDto;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }
+
     public Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
@@ -53,5 +56,51 @@ public class MemberService {
             throw new RuntimeException("Invalid password");
         }
         return member;
+    }
+
+    // 새로 추가된 메소드: 프로필 정보 조회
+    public ProfileDto getProfile(String userID) {
+        Member member = findByUserID(userID);
+        ProfileDto profileDTO = new ProfileDto();
+        profileDTO.setName(member.getName());
+        profileDTO.setDescription(member.getDescription());
+        profileDTO.setProfileImageUrl(member.getProfileImageUrl());
+        profileDTO.setHeight(member.getHeight());
+        profileDTO.setGender(member.getGender());
+        profileDTO.setAge(member.getAge());
+        profileDTO.setProfilePublic(member.isProfilePublic());
+        profileDTO.setStatusMessage(member.getStatusMessage());
+        return profileDTO;
+    }
+
+    // 새로 추가된 메소드: 계정 정보 조회
+    public AccountInfoDto getAccountInfo(String userID) {
+        Member member = findByUserID(userID);
+        AccountInfoDto accountInfoDTO = new AccountInfoDto();
+        accountInfoDTO.setUserID(member.getUserID());
+        accountInfoDTO.setPhoneNumber(member.getNumber());
+        accountInfoDTO.setEmail(member.getEmail());
+        return accountInfoDTO;
+    }
+
+    // 새로 추가된 메소드: 프로필 정보 업데이트
+    public void updateProfile(String userID, ProfileDto profileDTO) {
+        Member member = findByUserID(userID);
+        member.setName(profileDTO.getName());
+        member.setDescription(profileDTO.getDescription());
+        member.setProfileImageUrl(profileDTO.getProfileImageUrl());
+        member.setHeight(profileDTO.getHeight());
+        member.setGender(profileDTO.getGender());
+        member.setAge(profileDTO.getAge());
+        member.setProfilePublic(profileDTO.isProfilePublic());
+        member.setStatusMessage(profileDTO.getStatusMessage());
+        memberRepository.save(member);
+    }
+
+    // 새로 추가된 메소드: 프로필 공개 설정 업데이트
+    public void updatePrivacySettings(String userID, boolean isProfilePublic) {
+        Member member = findByUserID(userID);
+        member.setProfilePublic(isProfilePublic);
+        memberRepository.save(member);
     }
 }
