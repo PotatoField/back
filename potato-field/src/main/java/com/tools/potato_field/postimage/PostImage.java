@@ -3,8 +3,13 @@ package com.tools.potato_field.postimage;
 import com.tools.potato_field.post.Post;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+
 public class PostImage {
 
     @Id
@@ -23,32 +28,6 @@ public class PostImage {
     // 모든 필드를 포함하는 생성자
     public PostImage(String imageUrl, Post post) {
         this.imageUrl = imageUrl;
-        this.post = post;
-    }
-
-    // Getter 및 Setter 메서드
-
-    public Long getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
         this.post = post;
     }
 }
