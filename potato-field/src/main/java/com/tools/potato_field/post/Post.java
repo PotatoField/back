@@ -30,7 +30,7 @@ public class Post {
     // 기본 생성자
     public Post() {
     }
-
+    
     // 모든 필드를 받는 생성자
     public Post(String title, String content, Member member, Category_1 category) {
         this.title = title;
