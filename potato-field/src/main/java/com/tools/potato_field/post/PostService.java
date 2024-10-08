@@ -7,6 +7,8 @@ import com.tools.potato_field.member.Member;
 import com.tools.potato_field.ResourceNotFoundException;
 import com.tools.potato_field.postimage.PostImageRepository;
 import org.springframework.stereotype.Service;
+import com.tools.potato_field.category.CategoryRepository;
+import com.tools.potato_field.member.MemberRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +19,21 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
+    private final CategoryRepository categoryRepository;  // 기존 리포지토리 사용
+    private final MemberRepository memberRepository;
 
-    public PostService(PostRepository postRepository, PostImageRepository postImageRepository) {
+    public PostService(PostRepository postRepository, PostImageRepository postImageRepository,
+                       CategoryRepository categoryRepository, MemberRepository memberRepository) {
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
+        this.categoryRepository = categoryRepository;
+        this.memberRepository = memberRepository;
     }
+
+    /*public PostService(PostRepository postRepository, PostImageRepository postImageRepository) {
+        this.postRepository = postRepository;
+        this.postImageRepository = postImageRepository;
+    }*/
 
     public PostDto createPost(PostDto postDto) {
         Post post = mapToEntity(postDto);
@@ -71,7 +83,7 @@ public class PostService {
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setMemberId(post.getMember().getId());
-        //postDto.setCategoryId(post.getCategory().getId());
+        postDto.setCategoryId(post.getCategory().getId());
         return postDto;
     }
 
@@ -79,7 +91,25 @@ public class PostService {
         Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
-        // 카테고리, 멤버 설정 추가 필요
+
+        // 카테고리와 멤버를 DB에서 조회한 후 설정
+        Category category = categoryRepository.findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + postDto.getCategoryId()));
+        Member member = memberRepository.findById(postDto.getMemberId())
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + postDto.getMemberId()));
+
+        post.setCategory(category);
+        post.setMember(member);
+
         return post;
     }
+
+
+    /*private Post mapToEntity(PostDto postDto) {
+        Post post = new Post();
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        // 카테고리, 멤버 설정 추가 필요
+        return post;
+    }*/
 }
