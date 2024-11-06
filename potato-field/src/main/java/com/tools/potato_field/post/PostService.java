@@ -71,7 +71,7 @@ public class PostService {
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setMemberId(post.getMember().getId());
-        //postDto.setCategoryId(post.getCategory().getId());
+        postDto.setCategoryId(post.getCategory().getId());
         return postDto;
     }
 
