@@ -2,15 +2,15 @@ package com.tools.potato_field.post;
 
 import com.tools.potato_field.comment.CommentRepository;
 import com.tools.potato_field.dto.CommentDto;
+import com.tools.potato_field.post.PostDto;
 import com.tools.potato_field.comment.Comment;
 import com.tools.potato_field.category.Category;
 import com.tools.potato_field.member.Member;
 import com.tools.potato_field.ResourceNotFoundException;
-import com.tools.potato_field.postimage.PostImageRepository;
 import com.tools.potato_field.member.MemberRepository;
 import com.tools.potato_field.category.CategoryRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +20,17 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
-    }
-
-    /*public PostService(PostRepository postRepository, PostImageRepository postImageRepository) {
+    public PostService(PostRepository postRepository, MemberRepository memberRepository,
+                       CategoryRepository categoryRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
-        this.postImageRepository = postImageRepository;
-    }*/
+        this.memberRepository = memberRepository;
+        this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
+    }
 
     public PostDto createPost(PostDto postDto) {
         Post post = mapToEntity(postDto);
@@ -67,15 +71,12 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
-        // 댓글 객체 생성
         Comment comment = new Comment();
         comment.setContent(commentDto.getContent());
         comment.setPost(post);
 
-        // 댓글 저장
         Comment savedComment = commentRepository.save(comment);
 
-        // Post 엔티티에 댓글 추가
         if (post.getComments() == null) {
             post.setComments(List.of(savedComment)); // 댓글 리스트 초기화 후 추가
         } else {
@@ -86,23 +87,44 @@ public class PostService {
     }
 
     private PostDto mapToDto(Post post) {
-
+        return new PostDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getMember().getId(),
+                post.getCategory().getId(),
+                post.getComments().stream()
+                        .map(this::mapToCommentDto)
+                        .collect(Collectors.toList())
+        );
     }
 
     private CommentDto mapToCommentDto(Comment comment) {
         CommentDto dto = new CommentDto();
-        dto.setId(comment.getId()); // 댓글 ID 설정
-        dto.setContent(comment.getContent()); // 댓글 내용 설정
-        dto.setPostId(comment.getPost().getId()); // 댓글이 속한 Post ID 설정
-        dto.setMemberId(comment.getMember() != null ? comment.getMember().getId() : null); // 댓글 작성자 ID 설정 (작성자가 있을 경우만)
-        dto.setCreatedAt(comment.getCreatedAt()); // 댓글 작성 시간 설정
+        dto.setId(comment.getId());
+        dto.setContent(comment.getContent());
+        dto.setPostId(comment.getPost().getId());
+        dto.setMemberId(comment.getMember() != null ? comment.getMember().getId() : null);
+        dto.setCreatedAt(comment.getCreatedAt());
         return dto;
     }
-
 
     private Post mapToEntity(PostDto postDto) {
         Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
+        post.setCategory(findCategoryById(postDto.getCategoryId()));
+        post.setMember(findMemberById(postDto.getMemberId()));
+        return post;
+    }
 
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + memberId));
+    }
+
+    private Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
+    }
 }
