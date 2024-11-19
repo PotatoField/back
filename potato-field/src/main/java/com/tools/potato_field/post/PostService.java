@@ -10,7 +10,7 @@ import com.tools.potato_field.postimage.PostImageRepository;
 import com.tools.potato_field.member.MemberRepository;
 import com.tools.potato_field.category.CategoryRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -20,22 +20,13 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final CategoryRepository categoryRepository;
-    private final CommentRepository commentRepository; // minuk 추가
-    private final PostImageRepository postImageRepository; // main 추가
 
-    public PostService(PostRepository postRepository,
-                       MemberRepository memberRepository,
-                       CategoryRepository categoryRepository,
-                       CommentRepository commentRepository,
-                       PostImageRepository postImageRepository) {
-        this.postRepository = postRepository;
-        this.memberRepository = memberRepository;
-        this.categoryRepository = categoryRepository;
-        this.commentRepository = commentRepository; // 충돌 해결
-        this.postImageRepository = postImageRepository; // 충돌 해결
     }
+
+    /*public PostService(PostRepository postRepository, PostImageRepository postImageRepository) {
+        this.postRepository = postRepository;
+        this.postImageRepository = postImageRepository;
+    }*/
 
     public PostDto createPost(PostDto postDto) {
         Post post = mapToEntity(postDto);
@@ -95,14 +86,7 @@ public class PostService {
     }
 
     private PostDto mapToDto(Post post) {
-        return new PostDto(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getMember().getId(),
-                post.getCategory().getId(),
-                post.getComments().stream().map(this::mapToCommentDto).collect(Collectors.toList())
-        );
+
     }
 
     private CommentDto mapToCommentDto(Comment comment) {
@@ -120,18 +104,5 @@ public class PostService {
         Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
-        post.setCategory(findCategoryById(postDto.getCategoryId()));
-        post.setMember(findMemberById(postDto.getMemberId()));
-        return post;
-    }
 
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + memberId));
-    }
-
-    private Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-    }
 }
