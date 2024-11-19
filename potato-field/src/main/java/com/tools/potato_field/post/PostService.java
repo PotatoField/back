@@ -22,14 +22,19 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    private final CommentRepository commentRepository;
+    private final CommentRepository commentRepository; // minuk 추가
+    private final PostImageRepository postImageRepository; // main 추가
 
-    public PostService(PostRepository postRepository, MemberRepository memberRepository,
-                       CategoryRepository categoryRepository, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository,
+                       MemberRepository memberRepository,
+                       CategoryRepository categoryRepository,
+                       CommentRepository commentRepository,
+                       PostImageRepository postImageRepository) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepository;
-        this.commentRepository = commentRepository;
+        this.commentRepository = commentRepository; // 충돌 해결
+        this.postImageRepository = postImageRepository; // 충돌 해결
     }
 
     public PostDto createPost(PostDto postDto) {
