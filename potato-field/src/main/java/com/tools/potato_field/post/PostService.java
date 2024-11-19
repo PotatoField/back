@@ -1,5 +1,6 @@
 package com.tools.potato_field.post;
 
+import com.tools.potato_field.comment.CommentRepository;
 import com.tools.potato_field.dto.CommentDto;
 import com.tools.potato_field.comment.Comment;
 import com.tools.potato_field.category.Category;
@@ -19,16 +20,16 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostImageRepository postImageRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
-    public PostService(PostRepository postRepository, PostImageRepository postImageRepository,
-                       MemberRepository memberRepository, CategoryRepository categoryRepository) {
+    public PostService(PostRepository postRepository, MemberRepository memberRepository,
+                       CategoryRepository categoryRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
-        this.postImageRepository = postImageRepository;
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
     }
 
     public PostDto createPost(PostDto postDto) {
@@ -38,9 +39,7 @@ public class PostService {
     }
 
     public Optional<PostDto> getPostById(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
-        return Optional.of(mapToDto(post));
+        return postRepository.findById(id).map(this::mapToDto);
     }
 
     public List<PostDto> getAllPosts() {
@@ -51,10 +50,12 @@ public class PostService {
     public PostDto updatePost(Long id, PostDto postDto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
+
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setCategory(findCategoryById(postDto.getCategoryId()));
         post.setMember(findMemberById(postDto.getMemberId()));
+
         Post updatedPost = postRepository.save(post);
         return mapToDto(updatedPost);
     }
@@ -69,28 +70,46 @@ public class PostService {
     public CommentDto addComment(Long postId, CommentDto commentDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+
+        // 댓글 객체 생성
         Comment comment = new Comment();
         comment.setContent(commentDto.getContent());
         comment.setPost(post);
-        post.getComments().add(comment);  // 댓글을 포스트에 추가
 
-        return new CommentDto(comment.getId(), comment.getContent());
+        // 댓글 저장
+        Comment savedComment = commentRepository.save(comment);
+
+        // Post 엔티티에 댓글 추가
+        if (post.getComments() == null) {
+            post.setComments(List.of(savedComment)); // 댓글 리스트 초기화 후 추가
+        } else {
+            post.getComments().add(savedComment);
+        }
+
+        return mapToCommentDto(savedComment);
     }
 
     private PostDto mapToDto(Post post) {
-        PostDto postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setContent(post.getContent());
-        postDto.setMemberId(post.getMember().getId());
-        postDto.setCategoryId(post.getCategory().getId());
-        postDto.setComments(
-                post.getComments().stream()
-                        .map(comment -> new CommentDto(comment.getId(), comment.getContent()))
-                        .collect(Collectors.toList())
+        return new PostDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getMember().getId(),
+                post.getCategory().getId(),
+                post.getComments().stream().map(this::mapToCommentDto).collect(Collectors.toList())
         );
-        return postDto;
     }
+
+    private CommentDto mapToCommentDto(Comment comment) {
+        CommentDto dto = new CommentDto();
+        dto.setId(comment.getId()); // 댓글 ID 설정
+        dto.setContent(comment.getContent()); // 댓글 내용 설정
+        dto.setPostId(comment.getPost().getId()); // 댓글이 속한 Post ID 설정
+        dto.setMemberId(comment.getMember() != null ? comment.getMember().getId() : null); // 댓글 작성자 ID 설정 (작성자가 있을 경우만)
+        dto.setCreatedAt(comment.getCreatedAt()); // 댓글 작성 시간 설정
+        return dto;
+    }
+
 
     private Post mapToEntity(PostDto postDto) {
         Post post = new Post();
